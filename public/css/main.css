@@ -1,0 +1,42 @@
+
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:hover,
+.navbar-default .navbar-nav>.open>a:focus {
+  background: none;
+}
+
+.form-control{
+  display: inline;
+  position: absolute;
+  /*margin: 0 auto;*/
+  left: 320px;
+  top: 50%;
+  width: auto;
+  margin: auto;
+  transform: translateY(-50%);
+
+}
+
+.navbar-nav .dropdown-menu{
+  position: absolute;
+}
+.dropdown{
+  position: absolute;
+  right: 180px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dropdown-menu{
+  font-size: 14px;
+  padding-left: 10px;
+}
+.navbar-btn,.btn-group {
+  right: 100px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+}
+.btn-group .btn{
+  font-size: 12px;
+}
