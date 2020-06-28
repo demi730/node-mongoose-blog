@@ -25,3 +25,14 @@ app.listen(3000,function(){
     console.log('The server is running...')
 })
 ```
+## 路由设计
+
+| 路径      | 方法 | get参数 | post参数               | 备注         |
+| --------- | ---- | ------- | ---------------------- | ------------ |
+| /         | get  |         |                        | 首页         |
+| /register | get  |         |                        | 注册页面     |
+| /register | post |         | emai,nickname,password | 处理注册请求 |
+| /login    | get  |         |                        | 登录页面     |
+| /login    | post |         | email,password         | 处理登录请求 |
+| /logout   | get  |         |                        | 处理用户退出 |
+|           |      |         |                        |             |
