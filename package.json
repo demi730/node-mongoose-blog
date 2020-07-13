@@ -18,6 +18,6 @@
     "express-session": "^1.17.1",
     "is-keyword-js": "^1.0.3",
     "js-tokens": "^6.0.0",
-    "mongoose": "^5.7.1"
+    "mongoose": "^5.7.5"
   }
 }
