@@ -1,55 +1,88 @@
 {{extend '../_layouts/home.html'}}
 
 {{block 'title'}}{{'多人博客 - 首页'}}{{/block}}
-
+{{block 'head'}}
+<style type="text/css">
+  .form-control{
+    width: 30%;
+    height: 34px;
+  }
+</style>
+{{/block}}
 {{block 'body'}}
 <section class="container">
   {{include '../_partials/settings-nav.html'}}
-  <div class="col-md-5">
-    <form>
+  <div class="container">
+    {{ if user }}
+    <form id="profile_form">
       <div class="form-group">
-        <label for="exampleInputEmail1">账号</label>
-        <p class="form-control-static">email@example.com</p>
+        <label for="">账号</label>
+        <input type="email" class="form-control" id="" name="email" value="{{user.email}}" disabled="disabled">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">昵称</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
+        <label for="">昵称</label>
+        <input type="text" class="form-control" id="" name="nickname" value="{{user.nickname}}">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">介绍</label>
-        <textarea class="form-control" rows="3"></textarea>
+        <label for="">介绍</label>
+        <textarea class="form-control" rows="3" name="bio" id="">{{user.bio}}</textarea>
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">性别</label>
+        <label for="">性别</label>
         <div>
           <label class="radio-inline">
-            <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 男
+            <input type="radio" name="gender" id="inlineRadio1" value="-1" {{ user.gender==-1?'checked':null }}> 男
           </label>
           <label class="radio-inline">
-            <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 女
+            <input type="radio" name="gender" id="inlineRadio2" value="1" {{ user.gender==1?'checked':null }}> 女
           </label>
           <label class="radio-inline">
-            <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 保密
+            <input type="radio" name="gender" id="inlineRadio3" value="0" {{ user.gender==0?'checked':null }} > 保密
           </label>
         </div>
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">生日</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
+        <label for="">头像设置</label>
+        <input id="input-id" type="file" name="avatar">
       </div>
       <button type="submit" class="btn btn-success">保存</button>
     </form>
-  </div>
-  <div class="col-md-2 profile-avatar">
-    <dl>
-      <dt>头像设置</dt>
-      <dd>
-        <img class="avatar" width="150" height="150" src="../public/img/avatar-max-img.png" alt="">
-        <div>
-          <button class="btn btn-default" href="">Upload new picture</button>
-        </div>
-      </dd>
-    </dl>
+    {{ /if }}
   </div>
 </section>
+{{/block}}
+{{block 'script'}}
+<script>
+  $("#input-id").fileinput({
+    uploadUrl:"/public/img", //接受请求地址
+    language:'zh',
+    showRemove:false,
+    showUpload:false,
+    autoReplace: true,
+    allowedFileTypes : [ 'image' ],//配置允许文件上传的类型
+    allowedPreviewTypes : [ 'image' ],//配置所有的被预览文件类型
+    allowedPreviewMimeTypes : [ 'jpg', 'png'],//控制被预览的所有mime类型
+    dropZoneEnabled:false, //是否显示拖拽区域
+    enctype : 'multipart/form-data',
+  });
+  $('#profile_form').on('submit',e => {
+    e.preventDefault()
+    const formData = $(this).serialize()
+    $.ajax({
+      url: '/settings/profile',
+      type: 'post',
+      data: formData,
+      dataType: 'json',
+      success: data => {
+        const err_code = data.err_code
+        if (err_code === 0) {
+          window.alert('修改已保存')
+          // window.location.href = '/settings/profile'
+        } else if (err_code === 500) {
+          window.alert('服务器忙，请稍后重试！')
+        }
+      }
+    })
+  })
+</script>
 {{/block}}

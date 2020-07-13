@@ -1,10 +1,11 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var session = require('express-session')
-var path = require('path')
-var router = require('./router')
+const express = require('express')
+const template = require('art-template')
+const bodyParser = require('body-parser')
+const session = require('express-session')
+const path = require('path')
+const router = require('./router')
 
-var app = express()
+const app = express()
 
 app.use('/public/',express.static(path.join(__dirname,'./public/')))
 app.use('/node_modules/',express.static(path.join(__dirname,'./node_modules')))
@@ -22,6 +23,19 @@ app.use(session({
 }))
 
 app.use(router)
+
+//注册一个过滤器 通过处理时间戳 转为日期格式
+template.defaults.imports.getDate = dateTime =>{
+    const datetime = new Date(dateTime)
+
+    const year = datetime.getFullYear()
+    const month = ("0" + (datetime.getMonth() + 1)).slice(-2)
+    const date = ("0" + datetime.getDate()).slice(-2)
+    const hour = ("0" + datetime.getHours()).slice(-2)
+    const minute = ("0" + datetime.getMinutes()).slice(-2)
+
+    return  year + "-"+ month +"-"+ date +" "+ hour +":"+ minute
+}
 
 app.listen(3000,function(){
     console.log('The server is running...')

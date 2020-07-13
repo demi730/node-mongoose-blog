@@ -10,20 +10,22 @@
       <h2>修改密码</h2>
     </div>
     <hr>
-    <form>
+    <form id="admin_form">
+      <input type="text" id="password" value="{{user.password}}" hidden>
       <div class="form-group">
-        <label for="exampleInputPassword1">当前密码</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
+        <label for="">当前密码</label>
+        <input type="password" class="form-control" id="oldPassword" name="oldPassword">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">新的密码</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
+        <label for="">新的密码</label>
+        <input type="password" class="form-control" id="newPassword" name="newPassword">
       </div>
       <div class="form-group">
-        <label for="exampleInputPassword1">确认密码</label>
-        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="">
-      </div>
-      <button type="submit" class="btn btn-success">保存</button>
+        <label for="">确认密码</label>
+        <input type="password" class="form-control" id="checkPassword" name="checkPassword">
+        <br>
+        <button type="submit" class="btn btn-success">提交</button>
+        <hr>
     </form>
     <div class="subhead">
       <h2>注销账号</h2>
@@ -31,9 +33,62 @@
     </div>
     <div>
       <p>一旦注销，不可找回，请谨慎操作</p>
-      <button class="btn btn-danger">删除</button>
+      <button class="btn btn-danger" type="button" id="delete_user">注销</button>
     </div>
     <hr>
   </div>
 </section>
+{{/block}}
+{{block 'script'}}
+<script src="../../node_modules/blueimp-md5/js/md5.js"></script>
+<script>
+  $('#admin_form').on('submit',e => {
+    e.preventDefault()
+    const password = $("#password").val()
+    const oldP = md5(md5($('#oldPassword').val()))
+    const newP = $('#newPassword').val()
+    const checkP = $('#checkPassword').val()
+    if (oldP !== password){
+      window.alert("当前密码不正确")
+    }else if (checkP !== newP){
+      window.alert("两次密码输入不一致，请检查后重新输入！")
+    }else if (newP==='' || checkP===''){
+      window.alert('还没有输入内容！')
+    }else {
+      const formData = $(this).serialize()
+      $.ajax({
+        url: '/settings/admin',
+        type: 'post',
+        data: formData,
+        dataType: 'json',
+        success: data => {
+          const err_code = data.err_code
+          if (err_code === 0) {
+            window.alert('密码已修改成功,请重新登录')
+            window.location.href = '/login'
+          } else if (err_code === 500) {
+            window.alert('服务器忙，请稍后重试！')
+          }
+        }
+      })
+    }
+  })
+  $('#delete_user').on('click',e => {
+    if (window.confirm("确定要注销此账号吗?")){
+      $.ajax({
+        url: '/settings/delete',
+        type: 'get',
+        success: data => {
+          const err_code = data.err_code
+          if (err_code === 0) {
+            window.alert('账户已注销')
+            window.location.href = '/register'
+          } else if (err_code === 500) {
+            window.alert('服务器忙，请稍后重试！')
+          }
+        }
+      })
+    }
+  })
+</script>
 {{/block}}

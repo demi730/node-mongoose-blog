@@ -1,0 +1,11 @@
+.form-control{
+    display: inline;
+    position: absolute;
+    /*margin: 0 auto;*/
+    left: 320px;
+    top: 50%;
+    width: auto;
+    margin: auto;
+    transform: translateY(-50%);
+
+}

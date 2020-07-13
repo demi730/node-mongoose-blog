@@ -1,7 +1,7 @@
-var mongoose = require('mongoose')
-mongoose.connect('mongodb://localhost:27017/Minblog', {useNewUrlParser: true})
-var Schema = mongoose.Schema
-var userSchema = new Schema({
+const mongoose = require('mongoose')
+const db = require('./db')
+const Schema = mongoose.Schema
+const userSchema = new Schema({
     email: {
         type: String,
         required: true
@@ -37,9 +37,9 @@ var userSchema = new Schema({
         type: Number,
         enum: [-1,0,1],
         default: -1
-    },
-    birthday: {
-        type: Date
+        //-1 男
+        // 0 保密
+        // 1 女
     },
     status: {
         type: Number,
@@ -52,5 +52,5 @@ var userSchema = new Schema({
     }
 })
 
-var User = mongoose.model('User',userSchema)
+const User = mongoose.model('User',userSchema)
 module.exports = User
